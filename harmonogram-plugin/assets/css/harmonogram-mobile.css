@@ -1,0 +1,406 @@
+/* Import fontu Poppins z Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+/* Globalne zastosowanie czcionki Poppins z !important, aby uniknąć nadpisywania przez Elementor */
+html, body {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+/* Klasa ukrywająca tekst wizualnie, ale dostępna dla czytników ekranu */
+.screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Wyraźne style focus dla interaktywnych elementów */
+a:focus,
+button:focus,
+input:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Definicja zmiennych CSS dla kolorów */
+:root {
+    --color-white: #FFFFFF;
+    --color-light-gray: #F4F6F9;
+    --color-background: #E0E0E0;
+    --color-primary: #224A96;
+    --color-secondary: #005aa8;
+    --color-text: #333333;
+    --color-muted: #555555;
+    --color-hover: #1b3870;
+    --color-border: #ccc;
+
+    --color-plastik: #FFC107; /* Żółty */
+    --color-zmieszane: #000000; /* Czarny */
+    --color-papier: #2196F3; /* Niebieski */
+    --color-szklo: #4CAF50; /* Zielony */
+    --color-bio: #795548; /* Brązowy */
+
+    --color-card: #ffffff;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-icon-bg: #e0e0e0;
+
+    /* Stały kolor czarny dla tekstu rodzajów odpadów */
+    --color-waste-type: #000000;
+}
+
+/* Resetowanie stylów */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Główne tło i styl body */
+body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+/* Kontener nagłówka kalendarza */
+.calendar-header-container {
+    max-width: 100%;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: var(--color-card);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px var(--color-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Styl przycisku pobierania iCal */
+.download-ical-button {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.download-ical-button .button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px var(--color-shadow);
+}
+
+.download-ical-button .button:hover {
+    background-color: var(--color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--color-shadow);
+}
+
+/* Styl nagłówka miesiąca */
+.month-header-mobile {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: rgba(34, 74, 150, 0.1);
+    color: var(--color-primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--color-shadow);
+    margin-bottom: 20px;
+}
+
+/* Stylizacja nawigacji miesiąca */
+.month-navigation-mobile {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.prev-month-mobile,
+.next-month-mobile {
+    padding: 10px 20px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px var(--color-shadow);
+}
+
+.prev-month-mobile:disabled {
+    background-color: var(--color-muted);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.prev-month-mobile:hover:not(:disabled),
+.next-month-mobile:hover {
+    background-color: var(--color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--color-shadow);
+}
+
+.prev-month-mobile:active,
+.next-month-mobile:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px var(--color-shadow);
+}
+
+/* Stylizacja pola wyboru lokalizacji */
+.harmonogram-filters label {
+    display: block;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-text);
+    margin-bottom: 10px;
+}
+
+#harmonogram-mobile-location-filter {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif !important;
+    color: var(--color-text);
+    background-color: var(--color-light-gray);
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    appearance: none;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5"><path fill="%23333" d="M0 0l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 10px 5px;
+    cursor: pointer;
+}
+
+#harmonogram-mobile-location-filter:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
+}
+
+#harmonogram-mobile-location-filter:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 5px var(--color-secondary);
+}
+
+#harmonogram-mobile-location-filter:disabled {
+    background-color: var(--color-muted);
+    color: var(--color-light-gray);
+    cursor: not-allowed;
+}
+
+/* Stylizacja listy odpadów */
+.harmonogram-mobile-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.harmonogram-mobile-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: var(--color-card);
+    box-shadow: 0 2px 5px var(--color-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.harmonogram-mobile-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+/* Stylizacja daty */
+.harmonogram-mobile-date {
+    text-align: center;
+    color: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.harmonogram-mobile-date .day {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.harmonogram-mobile-date .month {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+}
+
+/* Stylizacja informacji o odpadach */
+.harmonogram-mobile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.harmonogram-mobile-info .waste-type {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--color-waste-type) !important;
+}
+
+/* Upewnienie się, że typy odpadów mają stały kolor czarny */
+.waste-type {
+    color: #000000 !important;
+}
+
+.harmonogram-mobile-info .days-until {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+/* Stylizacja ikony */
+.harmonogram-mobile-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-icon-bg);
+    box-shadow: 0 2px 5px var(--color-shadow);
+    margin-left: 15px;
+}
+
+/* Kolory dla poszczególnych typów odpadów */
+.harmonogram-mobile-item.plastik .harmonogram-mobile-icon {
+    background-color: var(--color-plastik);
+}
+
+.harmonogram-mobile-item.zmieszane .harmonogram-mobile-icon {
+    background-color: var(--color-zmieszane);
+}
+
+.harmonogram-mobile-item.bio .harmonogram-mobile-icon {
+    background-color: var(--color-bio);
+}
+
+.harmonogram-mobile-item.papier .harmonogram-mobile-icon {
+    background-color: var(--color-papier);
+}
+
+.harmonogram-mobile-item.szklo .harmonogram-mobile-icon {
+    background-color: var(--color-szklo);
+}
+
+.harmonogram-mobile-item.default .harmonogram-mobile-icon {
+    background-color: var(--color-icon-bg);
+}
+
+/* Responsywność dla mniejszych ekranów */
+@media (max-width: 480px) {
+    .calendar-header-container {
+        padding: 15px;
+        margin: 20px auto;
+    }
+
+    .download-ical-button {
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .download-ical-button .button {
+        padding: 12px 0;
+        font-size: 0.9rem;
+    }
+
+    .month-header-mobile {
+        font-size: 1.5rem;
+        padding: 8px 16px;
+        background-color: rgba(34, 74, 150, 0.1);
+    }
+
+    .month-navigation-mobile {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .prev-month-mobile,
+    .next-month-mobile {
+        width: 48%;
+        padding: 10px 0;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+
+    .download-ical-button .button {
+        width: 100%;
+    }
+
+    #harmonogram-mobile-location-filter {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .harmonogram-mobile-icon {
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+    }
+
+    .month-header-mobile {
+        font-size: 1.4rem;
+        padding: 6px 12px;
+    }
+}
+
+/* Stylizacja przycisków pobierania */
+#harmonogram-downloads a.download-link {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 12px 25px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px var(--color-shadow);
+}
+
+#harmonogram-downloads a.download-link:hover {
+    background-color: var(--color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--color-shadow);
+}
+
+#harmonogram-downloads a.download-link i {
+    margin-right: 8px;
+    vertical-align: middle;
+}

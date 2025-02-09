@@ -1,0 +1,32 @@
+/* admin.css */
+.wrap h1 {
+    margin-bottom: 20px;
+}
+
+.form-table th {
+    width: 150px;
+}
+
+.form-table td {
+    width: 300px;
+}
+
+table.widefat th, table.widefat td {
+    text-align: left;
+    padding: 8px;
+}
+
+table.widefat th {
+    background-color: #f1f1f1;
+}
+
+button.button-danger {
+    background-color: #dc3232;
+    border-color: #b03c3c;
+    color: #ffffff;
+}
+
+button.button-danger:hover {
+    background-color: #a32929;
+    border-color: #8b2828;
+}

@@ -1,0 +1,910 @@
+/* Importowanie czcionki Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Definicja klasy ukrywającej tekst, ale pozostawiającej go dostępnym dla czytników ekranu */
+.screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Wyraźne style focus dla interaktywnych elementów */
+a:focus,
+button:focus,
+input:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Zdefiniowanie zmiennych kolorów */
+:root {
+    --primary-color: #005aa8;
+    --secondary-color: #D4A700;
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --muted-color: #666666;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    
+    /* Kolory dla rodzajów odpadów */
+    --color-plastik: #fca311;
+    --color-metale: #fca311;
+    --color-opakowania: #fca311;
+    --color-zmieszane: #003049;
+    --color-papier: #1E88E5;
+    --color-szklo: #2c6e49;
+    --color-bio: #603808;
+    
+    /* Kolory wskaźników odpadów */
+    --indicator-plastik: #fca311;
+    --indicator-zmieszane: #003049;
+    --indicator-papier: #1E88E5;
+    --indicator-szklo: #2c6e49;
+    --indicator-bio: #603808;
+    --indicator-default: #000000;
+    
+    /* Kolory przycisków */
+    --button-bg: #ffffff;
+    --button-bg-hover: #f0f8ff;
+    --button-border: #e0e0e0;
+    --button-active-bg: var(--primary-color);
+    --button-active-color: #ffffff;
+    --button-icon-color: var(--primary-color);
+    --button-icon-active-color: #ffffff;
+}
+
+/* Resetowanie marginesów i paddingów */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Kontener główny */
+.harmonogram-container {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 30px;
+    background: var(--background-color);
+    border-radius: 12px; /* Zwiększone zaokrąglenie */
+    box-shadow: 0 2px 8px var(--shadow-color);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Formularz wyboru miejscowości */
+#harmonogram-location-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+    width: 100%; /* Pełna szerokość formularza */
+}
+
+/* Kontener pola wyboru miejscowości lub wyszukiwania */
+.select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%; /* Pełna szerokość pola */
+    overflow: hidden; /* Zapobiega wykraczaniu ikon poza zaokrąglone rogi */
+}
+
+/* Ikona po lewej stronie */
+.select-container svg {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--button-icon-color);
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+}
+
+/* Opcjonalna ikona/przycisk po prawej stronie */
+.select-container .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Pole wyszukiwania */
+.select-container input.ui-autocomplete-input {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 50px;
+    padding: 0 50px 0 45px; 
+    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: #f9f9f9;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    outline: none;
+}
+
+.select-container input.ui-autocomplete-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(0, 90, 168, 0.2);
+    background: #ffffff;
+}
+
+.select-container input.ui-autocomplete-input::placeholder {
+    color: var(--muted-color);
+    font-style: italic;
+}
+
+/* Nagłówki miesięcy */
+.harmonogram-month-header,
+.month-year {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--primary-color);
+    margin: 20px 0;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+    margin-left: 90px; /* Dodatkowe przesunięcie */
+}
+
+/* Stylizacja listy harmonogramu */
+.harmonogram-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 8px var(--shadow-color);
+    overflow: hidden;
+}
+
+/* Elementy listy harmonogramu */
+.harmonogram-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    transition: transform 0.2s ease-in-out, background 0.3s ease;
+    font-size: 18px;
+}
+
+.harmonogram-list-item:last-child {
+    border-bottom: none;
+}
+
+.harmonogram-list-item:hover {
+    background: #f0f8ff;
+    transform: translateY(-2px);
+}
+
+/* Lewa sekcja elementu */
+.harmonogram-item-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    color: var(--text-color);
+}
+
+/* Data w harmonogramie */
+.harmonogram-date {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Opis dni */
+.harmonogram-days {
+    font-size: 16px;
+    color: var(--muted-color);
+    margin-top: 4px;
+}
+
+/* Środkowa część */
+.harmonogram-item-center {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--text-color);
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+/* Wskaźniki odpadów */
+.waste-indicator-container {
+    display: flex;
+    gap: 8px;
+}
+
+.waste-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--indicator-color, var(--indicator-default));
+    border: 2px solid #fff;
+}
+
+/* Responsywność listy harmonogramu */
+@media (max-width: 768px) {
+    .harmonogram-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 20px;
+    }
+
+    .harmonogram-item-center {
+        margin-left: 0;
+        margin-top: 10px;
+        text-align: left;
+    }
+
+    .waste-indicator-container {
+        margin-top: 10px;
+        justify-content: flex-start;
+    }
+}
+
+/* Tabela harmonogramu */
+.harmonogram-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+    background: #f9f9f9;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.harmonogram-table th,
+.harmonogram-table td {
+    border: 1px solid var(--border-color);
+    text-align: center;
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.harmonogram-table th {
+    background: #f0f0f0;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: var(--text-color);
+}
+
+.harmonogram-table td.color-cell {
+    width: 40px;
+    padding: 0;
+}
+
+.harmonogram-table td.color-cell[data-waste-type="Tworzywa sztuczne, metale i opakowania wielomateriałowe"] {
+    background-color: var(--color-plastik);
+}
+
+.harmonogram-table td.color-cell[data-waste-type="Odpady zmieszane"] {
+    background-color: var(--color-zmieszane);
+}
+
+.harmonogram-table td.color-cell[data-waste-type="Odpady biodegradowalne"] {
+    background-color: var(--color-bio);
+}
+
+.harmonogram-table td.color-cell[data-waste-type="Papier"] {
+    background-color: var(--color-papier);
+}
+
+.harmonogram-table td.color-cell[data-waste-type="Szklo"] {
+    background-color: var(--color-szklo);
+}
+
+.harmonogram-table tr:hover {
+    background-color: #f2f2f2;
+    transition: background 0.3s ease;
+}
+
+.harmonogram-table td {
+    background: #fff;
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+/* Stylizacja kalendarza */
+#custom-calendar {
+    max-width: 1200px;
+    margin: 20px auto;
+    font-family: 'Poppins', sans-serif;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-header button {
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--button-border);
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-header button:hover {
+    background: var(--button-bg-hover);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.calendar-header button:active {
+    background: var(--button-active-bg);
+    color: var(--button-active-color);
+    border-color: var(--primary-color);
+}
+
+.calendar-header button svg.icon-arrow {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    stroke: var(--button-icon-color);
+    transition: stroke 0.3s;
+}
+
+.calendar-header button:hover svg.icon-arrow {
+    stroke: var(--primary-color);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+
+.calendar-day-header {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: #000;
+    background-color: #f0f0f0;
+    padding: 12px 0;
+    text-transform: uppercase;
+    border-radius: 4px;
+}
+
+.calendar-day {
+    background: #f9f9f9;
+    border-radius: 6px;
+    text-align: center;
+    padding: 16px;
+    position: relative;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.calendar-day:hover {
+    background: #e6f0ff;
+    transform: translateY(-2px);
+}
+
+.calendar-day.empty {
+    background: #f5f5f5;
+    pointer-events: none;
+    border-radius: 6px;
+}
+
+.day-number {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Wskaźniki odpadów w kalendarzu */
+.calendar-day .waste-indicator-container {
+    justify-content: center;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.calendar-day .waste-indicator {
+    width: 14px;
+    height: 14px;
+}
+
+/* Tooltipy – mechanizm używany dla wskaźników */
+.custom-tooltip {
+    position: absolute;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.custom-tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.custom-tooltip::before {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+}
+
+.calendar-day .tooltip {
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.calendar-day:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+}
+
+/* Dymek (tooltip) wyświetlany przy najechaniu – lekki styl */
+.hover-bubble {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 10000;
+    white-space: nowrap;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .harmonogram-container {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    #harmonogram-location-form {
+        gap: 15px;
+    }
+
+    .calendar-header button {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    .calendar-grid {
+        gap: 4px;
+    }
+
+    .waste-indicator {
+        width: 12px;
+        height: 12px;
+    }
+
+    .custom-tooltip {
+        font-size: 0.8rem;
+        padding: 4px 6px;
+    }
+
+    .harmonogram-tab-buttons .tab-btn {
+        font-size: 12px;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .navigation-buttons button {
+        width: 100%;
+    }
+
+    .select-container svg {
+        width: 18px;
+        height: 18px;
+        left: 10px;
+    }
+
+    .select-container input.ui-autocomplete-input {
+        padding: 0 15px 0 35px;
+        height: 45px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .harmonogram-table th,
+    .harmonogram-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .harmonogram-list-item {
+        font-size: 16px;
+    }
+
+    .harmonogram-date {
+        font-size: 16px;
+    }
+
+    .harmonogram-days,
+    .harmonogram-item-center {
+        font-size: 14px;
+    }
+
+    .ui-autocomplete {
+        min-width: 250px;
+        max-height: 200px;
+    }
+
+    .ui-menu-item-wrapper {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .ui-menu-item-wrapper:hover,
+    .ui-menu-item-wrapper.ui-state-active {
+        border-radius: 3px;
+        transform: scale(1.01);
+    }
+
+    .ui-menu-item-wrapper svg.icon-location {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Stylizacja przycisków nawigacyjnych */
+.navigation-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.navigation-buttons .btn {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navigation-buttons .btn:hover {
+    background: #003f73;
+    transform: translateY(-2px);
+}
+
+.navigation-buttons .btn:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 90, 168, 0.2);
+}
+
+/* Stylizacja przycisków w harmonogram-controls */
+.harmonogram-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.harmonogram-tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Stylizacja przycisków tab-btn */
+.tab-btn {
+    background: var(--button-bg);
+    border: 1px solid var(--button-border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, border-color 0.3s, transform 0.2s, padding 0.3s;
+}
+
+.tab-btn svg {
+    width: 24px;
+    height: 24px;
+    color: var(--button-icon-color);
+    transition: color 0.3s;
+}
+
+.tab-btn:hover {
+    background: var(--button-bg-hover);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.tab-btn.active svg {
+    color: var(--button-icon-active-color);
+}
+
+/* Stylizacja linków do pobierania */
+.harmonogram-downloads {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+}
+
+.harmonogram-download-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--button-bg);
+    border: 1px solid var(--button-border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 14px;
+    transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.harmonogram-download-link svg {
+    width: 24px;
+    height: 24px;
+    color: var(--button-icon-color);
+    transition: color 0.3s;
+}
+
+.harmonogram-download-link:hover {
+    background: var(--button-bg-hover);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.harmonogram-download-link:hover svg {
+    color: var(--primary-color);
+}
+
+#harmonogram-pdf {
+    display: none;
+}
+
+.harmonogram-download-link.active {
+    display: flex;
+}
+
+/* Dodatkowe style dla kalendarza */
+.calendar-day.has-waste {
+    border-bottom: 4px solid;
+}
+
+.calendar-day.has-waste[data-waste-type="Tworzywa sztuczne, metale i opakowania wielomateriałowe"] {
+    border-bottom-color: var(--color-plastik);
+}
+
+.calendar-day.has-waste[data-waste-type="Odpady zmieszane"] {
+    border-bottom-color: var(--color-zmieszane);
+}
+
+.calendar-day.has-waste[data-waste-type="Odpady biodegradowalne"] {
+    border-bottom-color: var(--color-bio);
+}
+
+.calendar-day.has-waste[data-waste-type="Papier"] {
+    border-bottom-color: var(--color-papier);
+}
+
+.calendar-day.has-waste[data-waste-type="Szklo"] {
+    border-bottom-color: var(--color-szklo);
+}
+
+/* Stylizacja listy podpowiedzi autocomplete */
+.ui-autocomplete {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+    margin-top: -1px;
+    padding: 8px 0;
+}
+
+.ui-menu-item-wrapper {
+    padding: 15px 60px 15px 30px !important;
+    color: var(--text-color);
+    cursor: default !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    background: transparent !important;
+    border: none;
+    margin: 8px 0 !important;
+    transition: none !important;
+}
+
+.ui-menu-item-wrapper:hover {
+    background: transparent !important;
+    color: var(--text-color) !important;
+    cursor: default !important;
+    border: none !important;
+}
+
+.ui-menu-item-wrapper svg.icon-location {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+/* Stylizacja pola wyboru */
+.select-container input.ui-autocomplete-input {
+    padding: 0 50px 0 45px;
+    height: 50px;
+    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: #f9f9f9;
+    outline: none;
+}
+
+.select-container input.ui-autocomplete-input:focus + .ui-autocomplete {
+    border-radius: 0;
+}
+
+.select-container input.ui-autocomplete-input:focus {
+    border-color: var(--primary-color);
+    background: #ffffff;
+    outline: none;
+}
+
+/* Responsywność - poprawki dla mniejszych ekranów */
+@media (max-width: 768px) {
+    .ui-menu-item-wrapper {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    .ui-autocomplete {
+        max-height: 200px;
+    }
+}
+
+/* Stylizacja sekcji z informacjami */
+.harmonogram-messages {
+    position: relative;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.harmonogram-messages::before {
+    content: "Informacje dotyczące wywozu odpadów:";
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.harmonogram-messages ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.harmonogram-messages ul li {
+    margin-bottom: 8px;
+}
+
+.harmonogram-messages ul li:hover {
+    color: var(--primary-color);
+    transition: color 0.3s;
+}
+
+/* Watermark dla sekcji z informacjami */
+.harmonogram-messages::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBpZD0iX3gzNF82X3gyQ19faW5mb194MkNfX2NoYXRfeDJDX19pbmZvcm1hdGlvbl94MkNfX2NvbW11bmljYXRpb25zX3gyQ19fbXVsdGltZWRpYV94MkNfX3NwZWVjaF9idWJibGUiPjxnPjxwYXRoIGQ9Im0yNTYgMTZjMTMyLjU1IDAgMjQwIDEwNy40NSAyNDAgMjQwcy0xMDcuNDUgMjQwLTI0MCAyNDBoLTIyNWw2Mi45Ny02Mi45N2MtNDcuOTItNDMuODctNzcuOTctMTA2Ljk0LTc3Ljk3LTE3Ny4wMyAwLTEzMi41NSAxMDcuNDUtMjQwIDI0MC0yNDB6IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMTIxIiBmaWxsPSIjODljY2ZmIiByPSIzMCIvPjxwYXRoIGQ9Im0yODYgMjQxdjE1MGMwIDE2LjU2LTEzLjQ0IDMwLTMwIDMwLTE2LjU3IDAtMzAtMTMuNDMtMzAtMzB2LTE1MGMwLTE2LjU3IDEzLjQzLTMwIDMwLTMwczMwIDEzLjQzIDMwIDMweiIgZmlsbD0iIzg5Y2NmZiIvPjxnIGZpbGw9IiMyMTY5YWMiPjxwYXRoIGQ9Im0yNTYgMTk2Yy0yNC44MTMgMC00NSAyMC4xODctNDUgNDV2MTUwYzAgMjQuODEzIDIwLjE4NyA0NSA0NSA0NXM0NS0yMC4xODcgNDUtNDV2LTE1MGMwLTI0LjgxMy0yMC4xODctNDUtNDUtNDV6bTE1IDE5NWMwIDguMjcxLTYuNzI5IDE1LTE1IDE1cy0xNS02LjcyOS0xNS0xNXYtMTUwYzAtOC4yNzEgNi43MjktMTUgMTUtMTVzMTUgNi43MjkgMTUgMTV6Ii8+PHBhdGggZD0ibTI1NiA3NmMtMjQuODEzIDAtNDUgMjAuMTg3LTQ1IDQ1czIwLjE4NyA0NSA0NSA0NSA0NS0yMC4xODcgNDUtNDUtMjAuMTg3LTQ1LTQ1LTQ1em0wIDYwYy04LjI3MSAwLTE1LTYuNzI5LTE1LTE1czYuNzI5LTE1IDE1LTE15IDE1IDYuNzI5IDE1IDE1LTYuNzI5IDE1LTE1IDE1eiIvPjxwYXRoIGQ9Im0yNTYgMWMtMTQwLjk1MSAwLTI1NSAxMTQuMDY4LTI1NSAyNTUgMCA2OC40NSAyNy4wMzUgMTMxLjEzOCA3MS42MDggMTc3LjE3OWwtNTIuMjE1IDUyLjIxNWMtOS40MzUgOS40MzUtMi43MTggMjUuNjA2IDEwLjYwNyAyNS42MDZoMjI1YzE0MC45NTEgMCAyNTUtMTE0LjA2OCAyNTUtMjU1IDAtMTQwLjk1MS0xMTQuMDY4LTI1NS0yNTUtMjU1em0wIDQ4MGgtMTg4Ljc4N2wzNy4zNTktMzcuMzU5YzYuMDM4LTYuMDM4IDUuODIxLTE1LjktLjQ3Ni0yMS42NjktNDYuNDUzLTQyLjU0LTczLjA5Ni0xMDMuMDM1LTczLjA5Ni0xNjUuOTcyIDAtMTI0LjA2NSAxMDAuOTM1LTIyNSAyMjUtMjI1czIyNSAxMDAuOTM1IDIyNSAyMjUtMTAwLjkzNSAyMjUtMjI1IDIyNXoiLz48L2c+PC9nPjwvc3ZnPg==');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px 12px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.05);
+    bottom: 10px;
+    right: 10px;
+    opacity: 0.3;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.harmonogram-messages:hover::after {
+    opacity: 0.6;
+}
+
+/* Responsywność dla sekcji z informacjami */
+@media (max-width: 768px) {
+    .harmonogram-messages {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .harmonogram-messages::before {
+        font-size: 16px;
+    }
+
+    .harmonogram-messages ul li {
+        margin-bottom: 6px;
+    }
+
+    .harmonogram-messages::after {
+        width: 20px;
+        height: 20px;
+        bottom: 8px;
+        right: 8px;
+        background-size: 10px 10px;
+    }
+}
+
+/* Dymek (tooltip) wyświetlany przy najechaniu – lekki styl */
+.hover-bubble {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 10000;
+    white-space: nowrap;
+}
